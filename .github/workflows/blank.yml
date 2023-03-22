@@ -25,9 +25,9 @@ jobs:
 
       - name: Run tests
         run: npm run test:unit
-        
-      - name: Install semantic-release
-        run: npm install semantic-release@17.4.7
+
+      - name: Echo
+        run: console.log(.releaserc)
       
       - name: Get Release Version
         id: get_version
