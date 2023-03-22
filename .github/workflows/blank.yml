@@ -18,31 +18,21 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
-        run: npm run test
+        run: npm run test:unit
 
-      - name: Generate version number
-        uses: docker://ghcr.io/semantic-release/exec:v3
-        with:
-          args: |
-            npx semantic-release --dry-run
-
-      - name: Build and tag Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: |
-            ghcr.io/nathanszig/vue-images:${{ env.DOCKER_TAG }}
-          build-args: |
-            VERSION=${{ env.DOCKER_TAG }}
-
-      - name: Push version number to GitHub
-        uses: docker://ghcr.io/semantic-release/github:v18
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm run build
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: npx semantic-release@17
+      - name: Create docker image
+        run: |
+          docker build -t vue-images .
+          docker tag vue-images ghcr.io/nathanszig/vue-images:${{ env.RELEASE_VERSION }}
+          docker push ghcr.io/nathanszig/vue-images:${{ env.RELEASE_VERSION }}
