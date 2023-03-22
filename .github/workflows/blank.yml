@@ -26,7 +26,7 @@ jobs:
       - name: Run tests
         run: npm run test:unit
 
-      Get Release Version and push to github
+      
       - name: Get Release Version
         id: get_version
         run: echo ::set-output name=RELEASE_VERSION::$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')
