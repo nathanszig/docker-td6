@@ -33,11 +33,10 @@ jobs:
       
       - name: Get Release Version
         id: get_version
-        run: echo "RELEASE_VERSION=$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')"
+        run: echo "RELEASE_VERSION=$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')" echo $RELEASE_VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      - run : echo steps.get_version.outputs
       - name: Create Release
         uses: actions/create-release@v1
         env:
