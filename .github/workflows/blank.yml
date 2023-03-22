@@ -30,7 +30,7 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: npx semantic-release@17
+        run: npx semantic-release@17 --rc-path .releaserc
       - name: Create docker image
         run: |
           docker build -t vue-images .
