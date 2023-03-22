@@ -37,7 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      - run : echo ${{ steps.get_version.outputs.RELEASE_VERSION }}
+      - run : echo steps.get_version.outputs.RELEASE_VERSION
       - name: Create Release
         uses: actions/create-release@v1
         env:
