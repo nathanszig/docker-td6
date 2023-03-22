@@ -30,16 +30,18 @@ jobs:
       
       - name: Get Release Version
         id: get_version
-        run: echo "RELEASE_VERSION=$(npx semantic-release@17 \ --rc-path .releaserc \ --plugins=@semantic-release/git,@semantic-release/docker \ --dry-run false)"
+        run: echo "::set-output name=RELEASE_VERSION::$(npx semantic-release@17 \
+          --rc-path .releaserc \
+          --plugins=@semantic-release/git,@semantic-release/docker \
+          --dry-run false | grep -oP '(?<=\@).*(?=\s)')"
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      # Use the release version and release the package
-
       - name: Create docker image
-        run : docker build . -t vue-images
-      - run : docker tag vue-images ghcr.io/nathanszig/vue-images:${{ steps.get_version.outputs.RELEASE_VERSION }}
-      - run : docker push ghcr.io/nathanszig/vue-images:${{ steps.get_version.outputs.RELEASE_VERSION }}
+        run: |
+          docker build . -t vue-images
+          docker tag vue-images ghcr.io/nathanszig/vue-images:${{ steps.get_version.outputs.RELEASE_VERSION }}
+          docker push ghcr.io/nathanszig/vue-images:${{ steps.get_version.outputs.RELEASE_VERSION }}
 
       
       
