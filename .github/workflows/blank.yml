@@ -36,13 +36,15 @@ jobs:
         run: echo ::set-output name=RELEASE_VERSION::$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+      - run : echo ${{ steps.get_version.outputs.RELEASE_VERSION }}
       - name: Create Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          tag_name: ${{ steps.get_version.outputs.RELEASE_VERSION }}
-          release_name: Release ${{ steps.get_version.outputs.RELEASE_VERSION }}
+          tag_name: v${{ steps.get_version.outputs.RELEASE_VERSION }}
+          release_name: v${{ steps.get_version.outputs.RELEASE_VERSION }}
           draft: false
           prerelease: false
 
