@@ -27,7 +27,7 @@ jobs:
         run: npm run test:unit
 
       - name: Echo
-        run: console.log(.releaserc)
+        run: cat .releaserc
       
       - name: Get Release Version
         id: get_version
