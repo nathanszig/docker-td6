@@ -36,5 +36,6 @@ jobs:
       
       - name: Create docker image
         run : docker build . -t vue-images
+      - run : docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN }}
       - run : docker tag vue-images ghcr.io/nathanszig/vue-images:1.0.1
       - run : docker push ghcr.io/nathanszig/vue-images:1.0.1
