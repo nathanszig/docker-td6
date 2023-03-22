@@ -30,9 +30,9 @@ jobs:
       
       - name: Get Release Version
         id: get_version
-        run: echo "::set-output name=RELEASE_VERSION::$(npx semantic-release@17 \
-          --rc-path .releaserc \
-          --plugins=@semantic-release/git,@semantic-release/docker \
+        run: echo "::set-output name=RELEASE_VERSION::$(npx semantic-release@17 
+          --rc-path .releaserc 
+          --plugins=@semantic-release/git,@semantic-release/docker 
           --dry-run false | grep -oP '(?<=\@).*(?=\s)')"
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
