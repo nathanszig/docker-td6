@@ -25,11 +25,13 @@ jobs:
 
       - name: Run tests
         run: npm run test:unit
-
+        
+      - name: Install semantic-release
+        run: npm install semantic-release@17.4.7
       
       - name: Get Release Version
         id: get_version
-        run: echo ::set-output name=RELEASE_VERSION::$(npx semantic-release@17 --rc-path .releaserc --dry-run --debug GH_TOKEN=${{ secrets.TOKEN }} | grep -oP '(?<=\@).*(?=\s)')
+        run: echo ::set-output name=RELEASE_VERSION::$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - name: Create Release
