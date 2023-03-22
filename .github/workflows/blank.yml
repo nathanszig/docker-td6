@@ -27,9 +27,6 @@ jobs:
 
       - name: Run tests
         run: npm run test:unit
-
-      - name: Echo
-        run: ls -l
       
       - name: Get Release Version
         id: get_version
@@ -37,15 +34,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      # Use the release version and release the package
+
+      - name: Release package
+        uses: cycjimmy/semantic-release-action@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.RELEASE_VERSION }}
-          release_name: v${{ steps.get_version.outputs.RELEASE_VERSION }}
-          draft: false
-          prerelease: false
+          semantic_version: ${{ steps.get_version.outputs.RELEASE_VERSION }}
+          extra_plugins: |
+            @semantic-release/exec
+          exec: |
+            npm publish --access public
 
       
       
