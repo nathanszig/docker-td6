@@ -33,7 +33,7 @@ jobs:
       
       - name: Get Release Version
         id: get_version
-        run: echo ::set-output name=RELEASE_VERSION::$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')
+        run: echo "RELEASE_VERSION=$(npx semantic-release@17 --rc-path .releaserc --dry-run | grep -oP '(?<=\@).*(?=\s)')" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
