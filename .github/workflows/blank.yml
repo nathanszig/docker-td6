@@ -1,41 +1,48 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [ main ]
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  build-and-deploy:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    strategy:
-      matrix:
-        node-version: [19.x]
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm i
-      - run: npm run test:unit
-      
-      - name: Create docker image
-        run : docker build . -t vue-images
-      - run : docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN }}
-      - run : docker tag vue-images ghcr.io/nathanszig/vue-images:1.0.1
-      - run : docker push ghcr.io/nathanszig/vue-images:1.0.1
+          node-version: '14.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Generate version number
+        uses: semantic-release/exec@v2
+        with:
+          args: |
+            npx semantic-release --dry-run
+
+      - name: Build and tag Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/nathanszig/vue-images:${{ env.DOCKER_TAG }}
+          build-args: |
+            VERSION=${{ env.DOCKER_TAG }}
+
+      - name: Push version number to GitHub
+        uses: semantic-release/github@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
