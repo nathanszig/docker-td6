@@ -30,10 +30,7 @@ jobs:
       
       - name: Get Release Version
         id: get_version
-        run: echo "RELEASE_VERSION=$(npx semantic-release@17 \
-  --rc-path .releaserc \
-  --plugins=@semantic-release/git,@semantic-release/docker \
-  --dry-run false)"
+        run: echo "RELEASE_VERSION=$(npx semantic-release@17 \ --rc-path .releaserc \ --plugins=@semantic-release/git,@semantic-release/docker \ --dry-run false)"
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
