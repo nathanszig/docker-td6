@@ -36,14 +36,10 @@ jobs:
 
       # Use the release version and release the package
 
-      - name: Release package
-        uses: cycjimmy/semantic-release-action@v2
-        with:
-          semantic_version: ${{ steps.get_version.outputs.RELEASE_VERSION }}
-          extra_plugins: |
-            @semantic-release/exec
-          exec: |
-            npm publish --access public
+      - name: Create docker image
+        run : docker build . -t vue-images
+      - run : docker tag vue-images ghcr.io/nathanszig/vue-images:${{ steps.get_version.outputs.RELEASE_VERSION }}
+      - run : docker push ghcr.io/nathanszig/vue-images:${{ steps.get_version.outputs.RELEASE_VERSION }}
 
       
       
