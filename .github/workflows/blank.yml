@@ -27,13 +27,13 @@ jobs:
         run: npm run test
 
       - name: Generate version number
-        uses: semantic-release/exec
+        uses: docker://ghcr.io/semantic-release/exec:v3
         with:
           args: |
             npx semantic-release --dry-run
 
       - name: Build and tag Docker image
-        uses: docker/build-push-action
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
@@ -43,6 +43,6 @@ jobs:
             VERSION=${{ env.DOCKER_TAG }}
 
       - name: Push version number to GitHub
-        uses: semantic-release/github
+        uses: docker://ghcr.io/semantic-release/github:v18
         with:
-          github_token: ${{ secrets.TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
